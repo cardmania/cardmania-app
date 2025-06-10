@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CardMania - Authentication Successful</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 500px;
+        }
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: #4CAF50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .checkmark {
+            color: white;
+            font-size: 48px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #666;
+            line-height: 1.6;
+        }
+        .code-display {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #1976d2;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background: #1565c0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">
+            <span class="checkmark">✓</span>
+        </div>
+        <h1>Authentication Successful!</h1>
+        <p>You have successfully authorized CardMania to access your eBay account.</p>
+        
+        <div id="auth-info" style="display: none;">
+            <p><strong>Authorization Code:</strong></p>
+            <div class="code-display" id="auth-code"></div>
+            <p>Copy this code and return to the CardMania application.</p>
+        </div>
+        
+        <a href="/" class="button">Return to CardMania</a>
+    </div>
+
+    <script>
+        // Parse URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        
+        if (code) {
+            document.getElementById('auth-info').style.display = 'block';
+            document.getElementById('auth-code').textContent = code;
+            
+            // If running locally, try to communicate with parent window
+            if (window.opener) {
+                window.opener.postMessage({ 
+                    type: 'ebay-auth-success', 
+                    code: code 
+                }, 'http://localhost:5173');
+            }
+        }
+    </script>
+</body>
+</html>
